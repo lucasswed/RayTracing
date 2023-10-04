@@ -3,6 +3,7 @@
 
 #include "classes/Color.hpp"
 #include "classes/Vec3.hpp"
+#include "classes/Ray.hpp"
 #include <iostream>
 
 #endif
