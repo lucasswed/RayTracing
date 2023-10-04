@@ -26,7 +26,7 @@ _BIN	=	./
 ############### COMPILER ################
 
 CC		=	c++
-CFLAGS	=	-Wall -Werror -Wextra -std=c++11 -stdlib=libc++ #-g -fsanitize=address
+CFLAGS	=	-Wall -Werror -Wextra -std=c++11 #-g -fsanitize=address
 #valgrind --leak-check=full --show-leak-kinds=all
 SRCS	=	$(_SRC)main.cpp
 OBJS	=	$(patsubst $(_SRC)%.cpp,$(_OBJ)%.o,$(SRCS))
