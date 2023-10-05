@@ -1,3 +1,3 @@
 # RayTracing
 
-Stopped at chapter 6
+Stopped at chapter 8
