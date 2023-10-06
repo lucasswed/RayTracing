@@ -4,6 +4,7 @@
 #include "../rayTracing.hpp"
 #include "Color.hpp"
 #include "Hittable.hpp"
+#include "Material.hpp"
 
 class Camera
 {
@@ -56,11 +57,18 @@ class Camera
       return (px * pixel_delta_u) + (py * pixel_delta_v);
     }
     
-    color ray_color(const Ray& r, const Hittable& world) {
+    color ray_color(const Ray& r, int depth, const Hittable& world) {
       hit_record rec;
 
-      if (world.hit(r, Interval(0, infinity), rec)) {
-        return 0.5 * (rec.normal + color(1,1,1));
+      if (depth <= 0)
+        return color(0,0,0);
+
+      if (world.hit(r, Interval(0.001, infinity), rec)) {
+        Ray scattered;
+        color attenuation;
+        if (rec.mat->scatter(r, rec,attenuation,scattered))
+          return attenuation * ray_color(scattered, depth-1, world);
+        return color(0,0,0);
       }
 
       Vec3  unit_direction = unit_vector(r.direction());
@@ -72,6 +80,7 @@ class Camera
     double  aspect_ratio = 1.0; // Ratio of image width over height
     int     image_width = 100; // Rendered image width in pixel count
     int     samples_per_pixel = 10; // Count of random samples for each pixel
+    int     max_depth = 10; // Maximum number of ray bounces into scene
 
     void    render(const Hittable& world) {
       initialize();
@@ -84,7 +93,7 @@ class Camera
           color pixel_color(0,0,0);
           for (int sample = 0; sample < samples_per_pixel; sample++) {
             Ray r = get_ray(i, j);
-            pixel_color += ray_color(r, world);
+            pixel_color += ray_color(r, max_depth, world);
           }
           write_color(std::cout, pixel_color, samples_per_pixel);
         }

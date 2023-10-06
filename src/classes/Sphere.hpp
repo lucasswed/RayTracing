@@ -1,15 +1,18 @@
 #ifndef SPHERE_HPP
 # define SPHERE_HPP
 
+#include "../rayTracing.hpp"
 #include "Hittable.hpp"
-#include "Vec3.hpp"
 
 class Sphere : public Hittable {
   private:
     point3  center;
     double  radius;
+    shared_ptr<Material> mat;
   public:
-    Sphere(const point3& _center, double _radius) : center(_center), radius(_radius) {}
+    Sphere(const point3& _center, double _radius, shared_ptr<Material> _material)
+    : center(_center), radius(_radius), mat(_material) {}
+
     bool  hit(const Ray& r, Interval ray_t, hit_record& rec) const override {
       Vec3  oc = center - r.origin();
         auto  a = r.direction().length_squared();
@@ -32,6 +35,7 @@ class Sphere : public Hittable {
         rec.p = r.at(rec.t);
         Vec3 outward_normal = (rec.p - center) / radius;
         rec.set_face_normal(r, outward_normal);
+        rec.mat = mat;
 
         return true;
     }

@@ -1,12 +1,15 @@
 #ifndef HITTABLE_HPP
 # define HITTABLE_HPP
 
-#include "Ray.hpp"
+#include "../rayTracing.hpp"
+
+class Material;
 
 class hit_record {
   public:
     point3  p;
     Vec3    normal;
+    shared_ptr<Material> mat;
     double  t;
     bool    front_face;
 
